@@ -1,0 +1,26 @@
+<mat-card>
+    <form [formGroup]="form" (submit)="onSubmit()">
+        <mat-card-content>
+            <mat-form-field>
+                <input type="email" matInput placeholder="Email" formControlName="email">
+                <mat-icon matSuffix *ngIf="showErrorIcon('email', email)" color="warn"
+                    [matTooltip]="displayErrors('email', email)">error</mat-icon>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="password" matInput placeholder="Password" formControlName="password">
+                <mat-icon matSuffix *ngIf="showErrorIcon('password', password)" color="warn"
+                    [matTooltip]="displayErrors('password', password)" matTooltipClass="tooltip">error</mat-icon>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="password" matInput placeholder="Confirm Password" formControlName="passwordConfirmation">
+                <mat-icon matSuffix *ngIf="showErrorIcon('passwordConfirmation', passwordConfirmation)" color="warn"
+                    [matTooltip]="displayErrors('passwordConfirmation', passwordConfirmation)"
+                    matTooltipClass="tooltip">error
+                </mat-icon>
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary">Register</button>
+        </mat-card-actions>
+    </form>
+</mat-card>
