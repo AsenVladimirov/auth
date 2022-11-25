@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatchPassword } from '../validators/match-password';
 import { UniqueEmail } from '../validators/unique-email';
+import { AuthService } from 'src/app/shared/auth.service';
+
 
 @Component({
   selector: 'app-register',
@@ -12,8 +14,10 @@ export class RegisterComponent implements OnInit {
   public form = new FormGroup({
     email: new FormControl(null, [
       Validators.required,
-      Validators.email
-    ], this.uniqueEmail.validate),
+      Validators.email,
+    ], [
+      this.uniqueEmail.validate
+    ]),
     password: new FormControl(null, [
       Validators.required,
       Validators.minLength(8)
@@ -28,13 +32,22 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private matchPasswordValidator: MatchPassword,
+    private authService: AuthService,
     private uniqueEmail: UniqueEmail
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   onSubmit() {
+    if (this.form.invalid) {
+      return;
+    }
+    const { email, password } = this.form.value;
+
+    this.authService.createAccount(email, password)
+      .subscribe((response) => {
+        console.log(response)
+      });
   }
 
   public showErrorIcon(controlName: string, control: AbstractControl | null): boolean {
@@ -54,7 +67,7 @@ export class RegisterComponent implements OnInit {
         return 'Email is required';
       } else if (control?.errors?.email) {
         return 'Invalid email';
-      } else if (control?.errors?.uniqueEmail === false) {
+      } else if (!control?.errors?.emailAvailable) {
         return 'Email already in use';
       }
     }

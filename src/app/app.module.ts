@@ -28,7 +28,9 @@ import { AuthModule } from './auth/auth.module';
     MatButtonModule,
     AuthModule
   ],
-  providers: [],
+  providers: [
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
