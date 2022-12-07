@@ -1,0 +1,7 @@
+<button (click)="fetch()">Fetch Emails</button>
+<button (click)="push()">Push Email</button>
+<ng-container *ngIf="emails.length">
+    <div *ngFor="let email of emails">
+        {{email.email}}
+    </div>
+</ng-container>

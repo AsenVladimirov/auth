@@ -1,53 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatchPassword } from '../validators/match-password';
 import { UniqueEmail } from '../validators/unique-email';
-import { AuthService } from 'src/app/shared/auth.service';
-
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-  public form = new FormGroup({
-    email: new FormControl(null, [
-      Validators.required,
-      Validators.email,
-    ], [
-      this.uniqueEmail.validate
-    ]),
-    password: new FormControl(null, [
-      Validators.required,
-      Validators.minLength(8)
-    ]),
-    passwordConfirmation: new FormControl(null, [
-      Validators.required,
-      Validators.minLength(8)
-    ])
-  }, {
-    validators: [this.matchPasswordValidator.validate]
-  });
+export class RegisterComponent {
+
+  public form!: FormGroup;
+
+  public isLoading = false;
 
   constructor(
+    private router: Router,
     private matchPasswordValidator: MatchPassword,
     private authService: AuthService,
     private uniqueEmail: UniqueEmail
-  ) { }
+  ) {
+    this.formInit();
+  }
 
-  ngOnInit(): void { }
-
-  onSubmit() {
+  public onSubmit(): void {
     if (this.form.invalid) {
       return;
     }
     const { email, password } = this.form.value;
 
-    this.authService.createAccount(email, password)
-      .subscribe((response) => {
-        console.log(response)
+    this.isLoading = true;
+
+    this.authService.signup(email, password)
+      .subscribe({
+        next: (response) => {
+          this.router.navigateByUrl('/inbox')
+
+          this.isLoading = false;
+        },
+        error: (err) => {
+          if (!err.status) {
+            this.form.setErrors({ noConnection: true });
+          } else {
+            this.form.setErrors({ unknownError: true })
+          }
+          this.isLoading = false;
+        }
       });
+
+    this.form.reset();
   }
 
   public showErrorIcon(controlName: string, control: AbstractControl | null): boolean {
@@ -89,6 +92,27 @@ export class RegisterComponent implements OnInit {
     }
 
     return 'debug';
+  }
+
+  private formInit(): void {
+    this.form = new FormGroup({
+      email: new FormControl(null, [
+        Validators.required,
+        Validators.email,
+      ], [
+        this.uniqueEmail.validate
+      ]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(8)
+      ]),
+      passwordConfirmation: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(8)
+      ])
+    }, {
+      validators: [this.matchPasswordValidator.validate]
+    });
   }
 
   public get email(): AbstractControl | null { return this.form.get('email') }

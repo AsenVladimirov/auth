@@ -14,6 +14,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SignoutComponent } from './signout/signout.component';
 
 
 
@@ -22,7 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    SignoutComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +38,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ]
 })
 export class AuthModule { }

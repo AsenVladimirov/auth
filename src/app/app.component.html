@@ -1,13 +1,15 @@
-<mat-sidenav-container fullscreen>
-  <mat-sidenav>
-
-  </mat-sidenav>
-
-  <mat-toolbar color="primary">
-    <button mat-icon-button>
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span class="spacer"></span>
+<mat-toolbar color="primary">
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="spacer"></span>
+  <ng-container *ngIf="user?.token">
+    <a mat-button routerLink="/signout">
+      <mat-icon>exit_to_app</mat-icon>
+      Log out
+    </a>
+  </ng-container>
+  <ng-container *ngIf="!user?.token">
     <a mat-button routerLink="/register">
       <mat-icon>person_add</mat-icon>
       Register
@@ -16,11 +18,8 @@
       <mat-icon>account_circle</mat-icon>
       Login
     </a>
-  </mat-toolbar>
-
-  <main>
-    <router-outlet></router-outlet>
-  </main>
-
-
-</mat-sidenav-container>
+  </ng-container>
+</mat-toolbar>
+<main>
+  <router-outlet></router-outlet>
+</main>
